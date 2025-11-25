@@ -1,0 +1,4 @@
+- 401 for missing token
+- 403 for invalid token
+- 404 for user not found
+- 500 for server errors
