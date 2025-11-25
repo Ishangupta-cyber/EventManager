@@ -8,17 +8,16 @@ info:
     liking/unliking, and ticket purchase/cancellation.
 
 servers:
-  - url: https://eventmanager-6gzf.onrender.com
+  - url: https://eventmanager-2-upuo.onrender.com
     description: Production server (default)
-  # Deployed URL example:
-  # - url: https://your-app.onrender.com
-  #   description: Production server
+  - url: http://localhost:3000
+    description: Local development server
 
 tags:
   - name: Auth
-    description: User authentication & profile
+    description: User authentication & profile (includes follow/unfollow and likes listing)
   - name: Events
-    description: Event CRUD & likes
+    description: Event CRUD & likes (includes feed and core actions)
   - name: Tickets
     description: Ticket purchase & cancellation
 
@@ -120,6 +119,74 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/{id}/follow:
+    post:
+      tags: [Auth]
+      summary: Follow a user
+      operationId: followUser
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID to follow
+      responses:
+        '200':
+          description: User followed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/{id}/unfollow:
+    post:
+      tags: [Auth]
+      summary: Unfollow a user
+      operationId: unfollowUser
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID to unfollow
+      responses:
+        '200':
+          description: User unfollowed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
@@ -231,8 +298,79 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /event/feed:
+    get:
+      tags: [Events]
+      summary: Get events feed from followed users
+      operationId: getEventfromFollowedUsers
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of events from followed users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event/most-liked:
+    get:
+      tags: [Events]
+      summary: Get most liked events
+      operationId: mostLikedEvents
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+          description: Max number of events to return
+      responses:
+        '200':
+          description: Top liked events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /event/{id}/like:
-    post:
+    patch:
       tags: [Events]
       summary: Like or unlike an event (toggle)
       operationId: toggleLikeEvent
@@ -274,89 +412,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /event/{id}/user-liked:
-    get:
-      tags: [Events]
-      summary: Check if logged-in user has liked an event
-      operationId: hasUserLikedEvent
-      security:
-        - cookieAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: Event ID
-      responses:
-        '200':
-          description: Like status
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  liked:
-                    type: boolean
-                    example: true
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Event not found (optional if you check)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /event/most-liked:
-    get:
-      tags: [Events]
-      summary: Get most liked events
-      operationId: mostLikedEvents
-      security:
-        - cookieAuth: []
-      parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 5
-          description: Max number of events to return
-      responses:
-        '200':
-          description: Top liked events
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Event'
         '500':
           description: Server error
           content:
@@ -573,6 +628,7 @@ components:
       properties:
         _id:
           type: string
+          example: 664f1e2b8c21c93d9c123456
         name:
           type: string
         description:

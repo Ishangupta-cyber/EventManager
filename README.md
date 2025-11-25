@@ -83,7 +83,7 @@ Blocks unauthorized access
 
 Your deployed Swagger UI is available at:
 
-👉 https://eventmanager-6gzf.onrender.com/api-docs
+👉 https://eventmanager-2-upuo.onrender.com/api-docs
 
 This interactive documentation allows you to:
 
@@ -105,7 +105,7 @@ Swagger powered by openapi.yaml, included in repo.
 
 Your backend is deployed at:
 
-👉 https://eventmanager-6gzf.onrender.com
+👉 https://eventmanager-2-upuo.onrender.com
 
 Use this as your base URL for frontend or API testing.
 
