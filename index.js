@@ -18,7 +18,9 @@ app.use("/user",userRouter)
 app.use("/event",EventRouter)
 app.use("/",TicketRouter)
 
-
+app.post("/",(req,res)=>{
+  res.send("Welcome to Event Management API")
+})
 
 const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerDocument))
