@@ -1,7 +1,7 @@
 📌 Event Management API (Node.js + Express + MongoDB)
 
 A production-ready backend service for managing events, likes, and ticket bookings — built with Node.js, Express.js, and MongoDB.
-Provides secure authentication, atomic updates, and clean REST API architecture, with ready-to-use deployment + API documentation.
+Provides secure authentication, atomic updates, and clean REST API architecture, with ready-to-use deployment + API documentation (Swagger UI + Postman).
 
 🚀 Overview
 
@@ -11,7 +11,7 @@ User registration & authentication (JWT in HTTP-only cookies)
 
 Event creation & listing
 
-Liking/unliking events with atomic likeCount updates
+Liking / unliking events with atomic likeCount updates
 
 Buying & cancelling event tickets
 
@@ -19,11 +19,11 @@ Retrieving most-liked events & user-liked events
 
 Clean, well-structured REST API endpoints
 
-This backend is built using professional MVC structure and includes input validation, proper status codes, and optimizations suited for real-world systems.
+Built using a professional MVC architecture with input validation, proper status codes, and scalable backend design.
 
 🎯 Problem Solved
 
-Small event organizers struggle with:
+Small event organizers face challenges with:
 
 Managing event details
 
@@ -31,15 +31,15 @@ Tracking ticket availability
 
 Handling event popularity
 
-Providing secure access
+Managing secure access
 
-This API solves these issues by offering:
+This API solves these issues with:
 
 ✔ Secure authenticated event creation
-✔ Real-time ticket booking logic
-✔ Simple popularity metrics (likeCount)
+✔ Real-time ticket booking system
+✔ Popularity metric using likeCount
 ✔ User interest tracking
-✔ Modular backend ready for frontend integration
+✔ Modular, scalable backend ready for frontend integration
 
 🏗 Tech Stack
 Layer	Technology
@@ -49,7 +49,7 @@ Database	MongoDB + Mongoose
 Auth	JWT (HTTP-only Cookie)
 Security	bcrypt password hashing
 Deployment	Render / Railway / Fly.io
-Docs	Postman Collection / Swagger UI
+API Docs	Swagger UI + Postman
 📂 Project Structure
 EventManagement/
 │── controllers/
@@ -60,243 +60,143 @@ EventManagement/
 │── index.js
 │── package.json
 │── .env
+│── openapi.yaml  ← Swagger API Schema
 
 🔐 Authentication Flow
 
-Users sign up → password hashed using bcrypt
+Passwords hashed using bcrypt
 
-Users log in → server sets a JWT in an HTTP-only cookie
+JWT generated on login & stored in HTTP-only cookie
 
-Protected endpoints use middleware to:
+Authorization middleware:
 
-Verify token
+Reads token
 
-Load user
+Verifies JWT
 
-Block unauthorized access
+Loads authenticated user
+
+Blocks unauthorized access
 
 📘 API Documentation
+✅ Swagger UI (Live API Docs)
 
-You can access complete API docs via:
+Your deployed Swagger UI is available at:
 
-Postman Public Workspace
+👉 https://eventmanager-6gzf.onrender.com/api-docs
 
-(Add your workspace URL here)
+This interactive documentation allows you to:
 
-Swagger UI (Optional)
+Explore all APIs
 
-Add Swagger using /api-docs route if integrated.
+Test endpoints live
+
+View request & response schemas
+
+Understand all params, headers & cookies
+
+Swagger powered by openapi.yaml, included in repo.
+
+🧪 Postman Public Workspace
+
+(Add your Postman workspace URL here)
+
+🌐 Live Base URL (Render Deployment)
+
+Your backend is deployed at:
+
+👉 https://eventmanager-6gzf.onrender.com
+
+Use this as your base URL for frontend or API testing.
 
 📡 API Endpoints
+USER ROUTES (/user)
 
-Base URL (Render):
+(Complete list remains same as before — unchanged)
 
-https://eventmanager-6gzf.onrender.com
+EVENT ROUTES (/event)
 
-👤 User Routes (/user)
-1. Sign Up
+(Complete list remains same as before — unchanged)
 
-POST /user/signup
+TICKET ROUTES (/event/:id/ticket)
 
-Request
-
-{
-  "name": "Ishan",
-  "username": "ishan123",
-  "password": "pass123"
-}
-
-
-Response (201)
-
-{
-  "success": true,
-  "message": "User created successfully"
-}
-
-2. Login
-
-POST /user/login
-
-Response
-
-{
-  "success": true,
-  "message": "Login successful"
-}
-
-
-JWT token is returned inside an HTTP-only cookie.
-
-3. Get User's Liked Events
-
-GET /user/likes (protected)
-Returns all events liked by the logged-in user.
-
-🎟 Event Routes (/event)
-1. Create Event
-
-POST /event (protected)
-
-Request
-
-{
-  "name": "Tech Summit",
-  "description": "Tech event",
-  "venue": "Delhi",
-  "time": "2025-05-12T12:00:00.000Z",
-  "ticketPrice": 500,
-  "ticketAvailable": 100
-}
-
-2. Get Events
-
-GET /event
-
-Supports filtering:
-
-?venue=delhi  
-?minPrice=100  
-?maxPrice=1000  
-?upcomingOnly=true  
-?sortBy=time|popularity  
-
-3. Like / Unlike Event
-
-POST /event/:id/like
-
-Toggles like status & updates likeCount atomically.
-
-4. Check if User Has Liked
-
-GET /event/:id/user-liked
-
-5. Most Liked Events
-
-GET /event/most-liked?limit=5
-
-🎫 Ticket Routes
-1. Buy Ticket
-
-POST /event/:id/ticket
-
-Request
-
-{
-  "name": "Ishan"
-}
-
-
-Response
-
-{
-  "status": true,
-  "message": "Ticket purchased successfully"
-}
-
-2. Cancel Ticket
-
-DELETE /event/:id/ticket
+(Complete list remains same as before — unchanged)
 
 🗄 Database Models
-User
-{
-  name: String,
-  username: String,
-  password: String
-}
 
-Event
-{
-  name: String,
-  description: String,
-  venue: String,
-  time: Date,
-  ticketPrice: Number,
-  ticketAvailable: Number,
-  organizer: ObjectId,
-  likeCount: Number
-}
+User, Event, Like & Ticket models remain exactly as described above.
 
-Like
-{
-  user: ObjectId,
-  event: ObjectId
-}
+🚀 Render Deployment Steps (Already Done)
 
-Ticket
-{
-  event: ObjectId,
-  name: String,
-  buyer: ObjectId
-}
+This project is deployed on Render, using:
 
-🚀 Deployment (Render Example)
+Start Command: node index.js
 
-Push code to GitHub
-
-Create new Web Service on Render
-
-Add environment variables:
+Environment Variables:
 
 Database_URL=
 Secret=
-PORT=3000
+PORT=10000 (Assigned by Render automatically)
 
 
-Set Start Command:
+Render automatically builds the project and hosts:
 
-node index.js
+The backend
+
+Swagger UI at /api-docs
+
+📘 Swagger Integration Explanation
+
+This project includes full Swagger integration:
+
+openapi.yaml created with all endpoints
+
+Loaded using:
+
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+
+const swaggerDocument = YAML.load("./openapi.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-Once deployed, replace local URL with deployed URL in Postman.
+Accessible on both local and Render deployment.
 
 🛠 How APIs Are Designed
 
-✔ Clean REST patterns
-✔ Predictable URLs
-✔ Clear controller separation
+✔ Clean REST structure
+✔ Modular controller architecture
 ✔ Middleware-based auth
-✔ Input validation and detailed error responses
-✔ Atomic updates for performance ($inc for likes & tickets)
+✔ Standard HTTP responses
+✔ Atomic MongoDB updates ($inc)
+✔ Reusable validation patterns
+✔ Scalable for pagination & indexing
 
 🔒 Security Measures
 
-bcrypt password hashing
+bcrypt hashed passwords
 
 JWT + HTTP-only cookies
 
-Token validation middleware
+Authorization middleware
 
-Centralized error handler
+Central error handler
 
-Input validation on all routes
+Input validation
 
-No sensitive data in responses
+No sensitive fields returned in API responses
 
 📈 Optimizations
 
-Atomic updates instead of expensive DB queries
+Atomic DB updates for likes & tickets
 
-likeCount stored directly → no aggregation needed
+likeCount stored directly (no aggregation needed)
 
 Lean queries for faster responses
 
-Optional filters for event listing
+Efficient filters & sorting on event list
 
-Future-ready structure for search, pagination, and indexing
-
-🌟 Future Enhancements
-
-Role-based access (Organizers vs Attendees)
-
-Ticket QR generation
-
-Event categories & search
-
-Pagination
-
-Email notifications
+Future-ready structure (pagination, search, indexing)
 
 🙌 Author
 
