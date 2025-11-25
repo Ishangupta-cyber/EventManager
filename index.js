@@ -17,8 +17,12 @@ app.use(express.json())
 app.use("/user",userRouter)
 app.use("/event",EventRouter)
 app.use("/",TicketRouter)
+
+
+
 const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerDocument))
+
 mongoose.connect(process.env.Database_URL).then(()=>{
 app.listen(3000, () => {
   console.log('Server is running on port 3000')
