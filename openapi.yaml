@@ -8,8 +8,8 @@ info:
     liking/unliking, and ticket purchase/cancellation.
 
 servers:
-  - url: http://localhost:3000
-    description: Local server
+  - url: https://eventmanager-6gzf.onrender.com
+    description: Production server (default)
   # Deployed URL example:
   # - url: https://your-app.onrender.com
   #   description: Production server
