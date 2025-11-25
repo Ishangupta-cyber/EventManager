@@ -89,7 +89,7 @@ Add Swagger using /api-docs route if integrated.
 
 📡 API Endpoints
 
-Base URL (Local):
+Base URL (Render):
 
 https://eventmanager-6gzf.onrender.com
 

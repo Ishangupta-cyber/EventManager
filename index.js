@@ -1,6 +1,8 @@
 import dotenv from "dotenv"
 import express from 'express';
 import mongoose from 'mongoose';
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 import userRouter from './routers/userrouter.js';
 import cookieParser from "cookie-parser";
 import EventRouter from "./routers/eventRouter.js";
@@ -15,7 +17,8 @@ app.use(express.json())
 app.use("/user",userRouter)
 app.use("/event",EventRouter)
 app.use("/",TicketRouter)
-
+const swaggerDocument = YAML.load("./openapi.yaml");
+app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerDocument))
 mongoose.connect(process.env.Database_URL).then(()=>{
 app.listen(3000, () => {
   console.log('Server is running on port 3000')

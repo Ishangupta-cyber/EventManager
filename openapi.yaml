@@ -1,0 +1,610 @@
+openapi: 3.0.3
+info:
+  title: Event Management API
+  version: 1.0.0
+  description: >
+    Backend API for managing users, events, likes, and tickets.
+    Provides JWT-based authentication (HTTP-only cookie), event creation,
+    liking/unliking, and ticket purchase/cancellation.
+
+servers:
+  - url: http://localhost:3000
+    description: Local server
+  # Deployed URL example:
+  # - url: https://your-app.onrender.com
+  #   description: Production server
+
+tags:
+  - name: Auth
+    description: User authentication & profile
+  - name: Events
+    description: Event CRUD & likes
+  - name: Tickets
+    description: Ticket purchase & cancellation
+
+paths:
+  /user/signup:
+    post:
+      tags: [Auth]
+      summary: User signup
+      operationId: signupUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/login:
+    post:
+      tags: [Auth]
+      summary: User login
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful; JWT set in HTTP-only cookie
+          headers:
+            Set-Cookie:
+              description: JWT token set as HTTP-only cookie named "token"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid credentials / validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/likes:
+    get:
+      tags: [Auth]
+      summary: Get events liked by logged-in user
+      operationId: getUserLikes
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of liked events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '401':
+          description: Unauthorized (no/invalid token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event:
+    get:
+      tags: [Events]
+      summary: Get list of events
+      operationId: getEvents
+      parameters:
+        - in: query
+          name: venue
+          schema:
+            type: string
+          description: Filter by venue (partial match)
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          description: Minimum ticket price
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          description: Maximum ticket price
+        - in: query
+          name: upcomingOnly
+          schema:
+            type: boolean
+          description: Only upcoming events (time > now)
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [time, popularity]
+          description: Sort by time or popularity
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Events]
+      summary: Create a new event
+      operationId: createEvent
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Event created successfully
+                  data:
+                    $ref: '#/components/schemas/Event'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event/{id}/like:
+    post:
+      tags: [Events]
+      summary: Like or unlike an event (toggle)
+      operationId: toggleLikeEvent
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      responses:
+        '200':
+          description: Like/unlike result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Event liked successfully
+                  likeCount:
+                    type: integer
+                    example: 5
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event/{id}/user-liked:
+    get:
+      tags: [Events]
+      summary: Check if logged-in user has liked an event
+      operationId: hasUserLikedEvent
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      responses:
+        '200':
+          description: Like status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  liked:
+                    type: boolean
+                    example: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found (optional if you check)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event/most-liked:
+    get:
+      tags: [Events]
+      summary: Get most liked events
+      operationId: mostLikedEvents
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+          description: Max number of events to return
+      responses:
+        '200':
+          description: Top liked events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /event/{id}/ticket:
+    post:
+      tags: [Tickets]
+      summary: Buy a ticket for an event
+      operationId: buyTicket
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyTicketRequest'
+      responses:
+        '201':
+          description: Ticket purchased successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Ticket purchased successfully
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+        '400':
+          description: No tickets available / validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Tickets]
+      summary: Cancel ticket for logged-in user for given event
+      operationId: cancelTicket
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      responses:
+        '200':
+          description: Ticket cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ticket or event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: JWT auth token stored in HTTP-only cookie named "token"
+
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Operation successful
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Something went wrong
+
+    SignupRequest:
+      type: object
+      required: [name, username, password]
+      properties:
+        name:
+          type: string
+          example: Ishan Gupta
+        username:
+          type: string
+          example: ishan123
+        password:
+          type: string
+          format: password
+          example: strongpassword
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          example: ishan123
+        password:
+          type: string
+          format: password
+          example: strongpassword
+
+    CreateEventRequest:
+      type: object
+      required:
+        - name
+        - description
+        - venue
+        - time
+        - ticketPrice
+        - ticketAvailable
+      properties:
+        name:
+          type: string
+          example: Tech Conference 2025
+        description:
+          type: string
+          example: A full-day conference on modern web and mobile development.
+        venue:
+          type: string
+          example: Delhi
+        time:
+          type: string
+          format: date-time
+          example: 2025-12-10T10:00:00.000Z
+        ticketPrice:
+          type: number
+          example: 499
+        ticketAvailable:
+          type: integer
+          example: 100
+
+    BuyTicketRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Ishan Gupta
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 664f1e2b8c21c93d9c123456
+        name:
+          type: string
+        username:
+          type: string
+
+    Event:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        venue:
+          type: string
+        time:
+          type: string
+          format: date-time
+        ticketPrice:
+          type: number
+        ticketAvailable:
+          type: integer
+        organizer:
+          oneOf:
+            - type: string
+            - $ref: '#/components/schemas/User'
+        likeCount:
+          type: integer
+          example: 0
+
+    Ticket:
+      type: object
+      properties:
+        _id:
+          type: string
+        event:
+          type: string
+          description: Event ID
+        name:
+          type: string
+          description: Name of ticket holder
+        buyer:
+          type: string
+          description: User ID of buyer
