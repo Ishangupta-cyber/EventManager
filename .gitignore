@@ -1,10 +1,9 @@
-
-// write a code to ignore node_modules and .env files
-node_modules/
+// command to ignore the .env file
 .env
-.DS_Store
-dist/
-coverage/
-logs/
-*.log
-npm-debug.log*
+# Ignore environment variable files
+.env.local
+.env.development.local  
+.env.test.local
+.env.production.local 
+# Ignore dotenv environment variable files
+*.env 
