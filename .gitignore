@@ -1,0 +1,10 @@
+
+// write a code to ignore node_modules and .env files
+node_modules/
+.env
+.DS_Store
+dist/
+coverage/
+logs/
+*.log
+npm-debug.log*
