@@ -91,7 +91,7 @@ Add Swagger using /api-docs route if integrated.
 
 Base URL (Local):
 
-http://localhost:3000
+https://eventmanager-6gzf.onrender.com
 
 👤 User Routes (/user)
 1. Sign Up
