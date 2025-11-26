@@ -262,26 +262,3 @@ export async function getEventfromFollowedUsers(req,res){
 
 
 
-export async function getlikedEvents(req,res){
-
-  try{
-    const user=req.user
-    
-    const likes=await Like.find({
-      user:user._id
-    }).populate("event")
-
-    return res.status(200).json({
-      success:true,
-      data:likes
-    })
-
-  }
-  catch(err){
-    return res.status(500).json({
-      success:false,
-      message:err.message||"Internal Server Error"
-    })
-  }
-
-}

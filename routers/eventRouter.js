@@ -8,7 +8,7 @@ EventRouter.post("/",authorizer,createEvent)
 
 EventRouter.get("/",getEvents)
 
-EventRouter.get("/likes",authorizer,getlikedEvents)
+
 
 EventRouter.get("/most-liked",authorizer,mostLikedEvents)
 
