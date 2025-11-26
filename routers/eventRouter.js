@@ -1,5 +1,5 @@
 import express from "express"
-import { createEvent, getEventfromFollowedUsers, getEvents, getlikedEvents, mostLikedEvents, toggleLikeEvent } from "../controllers/eventcontroller.js"
+import { createEvent, getEventfromFollowedUsers, getEvents, mostLikedEvents, toggleLikeEvent } from "../controllers/eventcontroller.js"
 import { authorizer } from "../middlewares/authorization.js"
 
 const EventRouter=express.Router()
