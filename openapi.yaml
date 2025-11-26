@@ -682,9 +682,9 @@ components:
           type: string
           description: User ID of buyer
     Like:
-  type: object
-  properties:
-    _id:
+      type: object
+      properties:
+        _id:
       type: string
     user:
       type: string
@@ -692,7 +692,7 @@ components:
     event:
       type: string
       description: Event ID liked
-Follow:
+    Follow:
   type: object
   properties:
     _id:
