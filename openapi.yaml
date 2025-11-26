@@ -685,19 +685,19 @@ components:
       type: object
       properties:
         _id:
-      type: string
-    user:
-      type: string
-      description: ID of liker
-    event:
-      type: string
-      description: Event ID liked
+          type: string
+        user:
+          type: string
+          description: ID of liker
+        event:
+          type: string
+          description: Event ID liked
     Follow:
-  type: object
-  properties:
-    _id:
-      type: string
-    follower:
-      type: string
-    following:
-      type: string
+      type: object
+      properties:
+        _id:
+          type: string
+        follower:
+          type: string
+        following:
+          type: string
