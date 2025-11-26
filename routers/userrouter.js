@@ -10,5 +10,5 @@ userRouter.post("/login",LoginUser)
 userRouter.post("/:id/follow",authorizer,followUser)
 userRouter.post("/:id/unfollow",authorizer,unfollowUser)
 
-userRouter.get("/like/events",authorizer,getlikedEvents)
+userRouter.get("/like_events",authorizer,getlikedEvents)
 export default userRouter
