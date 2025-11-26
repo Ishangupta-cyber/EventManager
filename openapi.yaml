@@ -31,26 +31,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupRequest'
+              $ref: "#/components/schemas/SignupRequest"
       responses:
-        '201':
+        "201":
           description: User created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '400':
+                $ref: "#/components/schemas/BaseResponse"
+        "400":
           description: Validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /user/login:
     post:
@@ -62,9 +62,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: "#/components/schemas/LoginRequest"
       responses:
-        '200':
+        "200":
           description: Login successful; JWT set in HTTP-only cookie
           headers:
             Set-Cookie:
@@ -74,19 +74,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '400':
+                $ref: "#/components/schemas/BaseResponse"
+        "400":
           description: Invalid credentials / validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /user/{id}/follow:
     post:
@@ -103,30 +103,30 @@ paths:
             type: string
           description: User ID to follow
       responses:
-        '200':
+        "200":
           description: User followed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '401':
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: User not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /user/{id}/unfollow:
     post:
@@ -143,30 +143,30 @@ paths:
             type: string
           description: User ID to unfollow
       responses:
-        '200':
+        "200":
           description: User unfollowed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '401':
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: User not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /user/like_events:
     get:
@@ -176,7 +176,7 @@ paths:
       security:
         - cookieAuth: []
       responses:
-        '200':
+        "200":
           description: List of liked events
           content:
             application/json:
@@ -189,19 +189,19 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Event'
-        '401':
+                      $ref: "#/components/schemas/Event"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /event:
     get:
@@ -242,7 +242,7 @@ paths:
             enum: [asc, desc]
           description: Sort order
       responses:
-        '200':
+        "200":
           description: List of events
           content:
             application/json:
@@ -255,13 +255,13 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Event'
-        '500':
+                      $ref: "#/components/schemas/Event"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags: [Events]
       summary: Create a new event
@@ -273,9 +273,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateEventRequest'
+              $ref: "#/components/schemas/CreateEventRequest"
       responses:
-        '201':
+        "201":
           description: Event created
           content:
             application/json:
@@ -289,25 +289,25 @@ paths:
                     type: string
                     example: Event created successfully
                   data:
-                    $ref: '#/components/schemas/Event'
-        '400':
+                    $ref: "#/components/schemas/Event"
+        "400":
           description: Validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /event/most-liked:
     get:
@@ -324,7 +324,7 @@ paths:
             default: 5
           description: Max number of events to return
       responses:
-        '200':
+        "200":
           description: Top liked events
           content:
             application/json:
@@ -337,19 +337,19 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Event'
-        '401':
+                      $ref: "#/components/schemas/Event"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /event/feed:
     get:
@@ -359,7 +359,7 @@ paths:
       security:
         - cookieAuth: []
       responses:
-        '200':
+        "200":
           description: List of events from followed users
           content:
             application/json:
@@ -372,19 +372,19 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Event'
-        '401':
+                      $ref: "#/components/schemas/Event"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /event/{id}/like:
     patch:
@@ -401,7 +401,7 @@ paths:
             type: string
           description: Event ID
       responses:
-        '200':
+        "200":
           description: Like/unlike result
           content:
             application/json:
@@ -417,24 +417,24 @@ paths:
                   likeCount:
                     type: integer
                     example: 5
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Event not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /event/{id}/ticket:
     post:
@@ -455,9 +455,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BuyTicketRequest'
+              $ref: "#/components/schemas/BuyTicketRequest"
       responses:
-        '201':
+        "201":
           description: Ticket purchased successfully
           content:
             application/json:
@@ -471,31 +471,31 @@ paths:
                     type: string
                     example: Ticket purchased successfully
                   data:
-                    $ref: '#/components/schemas/Ticket'
-        '400':
+                    $ref: "#/components/schemas/Ticket"
+        "400":
           description: No tickets available / validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Event not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags: [Tickets]
       summary: Cancel ticket for logged-in user for given event
@@ -510,30 +510,30 @@ paths:
             type: string
           description: Event ID
       responses:
-        '200':
+        "200":
           description: Ticket cancelled successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '401':
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Ticket or event not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   securitySchemes:
@@ -662,7 +662,7 @@ components:
         organizer:
           oneOf:
             - type: string
-            - $ref: '#/components/schemas/User'
+            - $ref: "#/components/schemas/User"
         likeCount:
           type: integer
           example: 0
@@ -681,3 +681,23 @@ components:
         buyer:
           type: string
           description: User ID of buyer
+    Like:
+  type: object
+  properties:
+    _id:
+      type: string
+    user:
+      type: string
+      description: ID of liker
+    event:
+      type: string
+      description: Event ID liked
+Follow:
+  type: object
+  properties:
+    _id:
+      type: string
+    follower:
+      type: string
+    following:
+      type: string
