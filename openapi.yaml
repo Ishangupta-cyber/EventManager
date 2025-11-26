@@ -508,7 +508,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Event ID
+          description: Ticket ID
       responses:
         "200":
           description: Ticket cancelled successfully
